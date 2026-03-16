@@ -1,0 +1,9 @@
+CREATE OR REPLACE FUNCTION role_trigger()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+INSERT INTO roles(name,created_date) VALUES(NEW.name,NOW());
+RETURN NEW;
+END;
+$$;

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Panel</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="./static/js/login_auth.js" defer></script>
+    </head>
+    <body class="bg-gray-500 h-screen flex justify-center m-5">
+        <div class="flex flex-col w-full">
+            <div class="p-4 flex justify-between items-center bg-white h-1/4 w-full rounded-xl">
+                <h1 class="font-extrabold text-3xl">Welcome, Administrator</h1>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="bg-gray-500 rounded-xl p-3 hover:bg-red-500">Logout</button>
+                </form>
+            </div>
+
+            <div class="my-10 p-10 bg-white flex flex-col items-start rounded-xl">
+                <h1 class="text-2xl font-bold my-4">Control Panel</h1>
+                <div class="flex flex-col">
+                    <div class="flex justify-between">
+                        <div class="flex justify-start">
+                            <a href="/adminpanel?page=1" class="mr-4 hover:underline ">Reset</a>
+                            <form action="/search-name" method="POST">
+                                <input placeholder="User Lookup" name="search" class="border border-black">
+                                <button type="submit" name="search-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" 
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke-width="1.5" 
+                                        stroke="currentColor" 
+                                        class="w-5 h-5">
+                                        <path stroke-linecap="round" 
+                                        stroke-linejoin="round" 
+                                        d="m21 21-4.35-4.35m1.85-5.65a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" />
+                                        </svg>
+                                </button>
+                            </form>
+                        </div>
+                        <a class="self-end hover:underline transition transform hover:scale-105 mb-4"href="/admin/create">Add a User</a>
+                    </div>
+                    
+                
+                
+                
+                    
+                    <table class="border border-black border-collapse mb-5">
+                        <tr>
+                            <th class="border border-black text-center">ID</th>
+                            <th class="border border-black text-center">Name</th>
+                            <th class="border border-black text-center">Email</th>
+                            <th class="border border-black text-center">Role</th>
+                            <th class="border border-black text-center">Admin Action</th>
+                        </tr>
+                        {{range .users}}
+                        <tr>
+                            <td class="border border-black text-center">{{.UserID}}</td>
+                            <td class="border border-black text-center">{{.Name}}</td>
+                            <td class="border border-black text-center">{{.Email}}</td>
+                            <td class="border border-black text-center">{{.Role}}</td>
+                            <td class="border border-black text-center">
+                                <form action="/admin/edit/{{.UserID}}/{{.Role}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="hover:text-blue-600 border border-black">
+                                        Change Role
+                                    </button>
+                                </form>
+
+                                <form action="/admin/delete/{{.UserID}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="hover:text-red-600 border border-black">
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </td>
+                        </tr>
+                        {{end}}
+                    </table>
+                    <div class="flex justify-between">
+                        {{if gt .page 1}}
+                            <a href="/adminpanel?page={{sub .page 1}}" class="text-blue-500 hover:underline">Previous</a>
+                        {{end}}
+                        <a href="/adminpanel?page={{add .page 1}}" class="text-blue-500 hover:underline">Next</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
