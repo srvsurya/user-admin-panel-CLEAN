@@ -1,5 +1,5 @@
 package handlers
-
+// Logging is usually unecessary here maybe?
 import (
 "github.com/gin-gonic/gin"
 "gorm.io/gorm"
