@@ -10,10 +10,15 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"Week_12/logger"
+
 )
 
 func main(){
+	logger.Init()
+	defer logger.Log.Sync()
 	database:=db.Connect()
+	db.Migrate(database)
 	r:=gin.Default()
 	//template functions
 	r.SetFuncMap(template.FuncMap{
@@ -32,6 +37,7 @@ func main(){
 		SameSite: http.SameSiteLaxMode,
 	})
 	r.Use(sessions.Sessions("mysession",store))
+	r.Use(middleware.RequestIDCreator())
 
 	r.GET("/",func(c *gin.Context){
 		session:=sessions.Default(c)
