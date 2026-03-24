@@ -5,9 +5,9 @@ import (
 		"log"
 	"gorm.io/gorm"
 	"gorm.io/driver/postgres"
-	"Week_12/models"
+	"Week_12/internal/models"
 	"fmt"
-	"Week_12/config"
+	"Week_12/internal/config"
 	"os"
 
 )

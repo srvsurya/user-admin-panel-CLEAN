@@ -1,16 +1,18 @@
 package main
 
 import (
-	"Week_12/db"
-	"Week_12/handlers"
-	"Week_12/middleware"
+	"Week_12/internal/db"
+	"Week_12/internal/handlers"
+	"Week_12/internal/middleware"
 	"net/http"
 	"text/template"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"Week_12/logger"
+	"Week_12/internal/logger"
+	"Week_12/internal/service"
+	"Week_12/internal/repository"
 
 )
 
@@ -20,13 +22,15 @@ func main(){
 	database:=db.Connect()
 	db.Migrate(database)
 	r:=gin.Default()
+	userRepo:=repository.NewUserRepository(database)
+	userService:=service.NewUserService(userRepo)
 	//template functions
 	r.SetFuncMap(template.FuncMap{
 		"add":func( a int, b int )int{return a+b},
 		"sub":func(a int, b int)int{return a-b},
 	})
-	r.LoadHTMLGlob("templates/*")
-	r.Static("/static","./static")
+	r.LoadHTMLGlob("web/templates/*")
+	r.Static("web/static","./static")
 
 	store:=cookie.NewStore([]byte("super-secret-key"))
 		store.Options(sessions.Options{
@@ -57,21 +61,21 @@ func main(){
 	r.GET("/signup",func(c *gin.Context){
 		c.HTML(200,"sign_up.html",nil)
 	})
-	r.GET("/home",middleware.UserMiddlewareAuth(),handlers.HomeHandler(database))
+	r.GET("/home",middleware.UserMiddlewareAuth(),handlers.HomeHandler(userService))
 	r.GET("/login",func(c *gin.Context){
 		c.HTML(200,"login.html",nil)
 	})
-	r.GET("/adminpanel",middleware.UserMiddlewareAuth(),middleware.AdminMiddlewareAuth(),handlers.AdminviewHandler(database))
+	r.GET("/adminpanel",middleware.UserMiddlewareAuth(),middleware.AdminMiddlewareAuth(),handlers.AdminviewHandler(userService))
 	r.GET("/admin/create",middleware.UserMiddlewareAuth(),middleware.AdminMiddlewareAuth(),func(c *gin.Context){
 		c.HTML(200,"create_user.html",nil)
 	})
 	r.POST("/logout",handlers.LogoutHandler())
-	r.POST("/register",handlers.RegisterHandler(database))
-	r.POST("/login",handlers.LoginHandler(database))
-	r.POST("/admin/create/",handlers.AdminCreateUser(database))
-	r.POST("/admin/edit/:id/:role",handlers.AdminEditUser(database))
-	r.POST("/admin/delete/:id",handlers.AdminDeleteUser(database))
-	r.POST("/search-name",handlers.AdminUserSearch(database))
+	r.POST("/register",handlers.RegisterHandler(userService))
+	r.POST("/login",handlers.LoginHandler(userService))
+	r.POST("/admin/create/",handlers.AdminCreateUser(userService))
+	r.POST("/admin/edit/:id/:role",handlers.AdminEditUser(userService))
+	r.POST("/admin/delete/:id",handlers.AdminDeleteUser(userService))
+	r.POST("/search-name",handlers.AdminUserSearch(userService))
 
 	
 
