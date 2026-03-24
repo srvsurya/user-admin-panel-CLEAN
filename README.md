@@ -42,3 +42,11 @@ I focused on building the project step by step and improving it over time instea
 5.Zap Logger
 
 7.dotenv
+
+**Architecture**
+
+This project follows the Clean Architecture pattern to keep the code modular, testable, and easy to maintain as the application grows.
+
+The application is divided into clear layers, where each layer has a single responsibility and depends only on the layer below it.
+
+Handlers  →  Services  →  Repository  →  Database
