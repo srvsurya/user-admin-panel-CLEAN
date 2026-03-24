@@ -2,7 +2,7 @@ package logger
 
 import ("go.uber.org/zap"
 		"os"
-		"Week_12/config")
+		"Week_12/internal/config")
 
 var Log *zap.Logger
 

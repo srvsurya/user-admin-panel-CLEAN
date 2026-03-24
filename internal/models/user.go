@@ -1,8 +1,8 @@
 package models
 
-import ("Week_12/utils"
+import ("Week_12/internal/utils"
 "gorm.io/gorm"
-"Week_12/logger"
+"Week_12/internal/logger"
 "go.uber.org/zap")
 
 type User struct{
