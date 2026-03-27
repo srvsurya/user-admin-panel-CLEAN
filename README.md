@@ -50,3 +50,5 @@ This project follows the Clean Architecture pattern to keep the code modular, te
 The application is divided into clear layers, where each layer has a single responsibility and depends only on the layer below it.
 
 Handlers  →  Services  →  Repository  →  Database
+
+testing in main
